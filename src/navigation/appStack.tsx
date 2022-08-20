@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {Home, Login, Register} from "../screens";
+import {Tasks, PrayerTime} from "../screens";
+
+
 const AppStack: FC = () => {
   const Stack = createNativeStackNavigator();
 
@@ -10,9 +12,8 @@ const AppStack: FC = () => {
         backgroundColor: '#2A2541',
       },
     }}>
-      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+      <Stack.Screen name="PrayerTime" component={PrayerTime} options={{ headerShown: false }} />
+      <Stack.Screen name="Tasks" component={Tasks} options={{ headerShown: false }} />
     </Stack.Navigator>
   )
 }

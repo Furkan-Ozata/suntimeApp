@@ -1,6 +1,8 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
-import AppStack from './appStack';
+import auth from '@react-native-firebase/auth';
+import AuthStack from './AuthStack';
+import AppStack from './AppStack';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -12,9 +14,27 @@ const MyTheme = {
 };
 
 const MainNav: FC = () => {
+
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+
   return (
     <NavigationContainer theme={MyTheme}>
-      <AppStack />
+     {user !== null ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

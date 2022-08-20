@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "56410204684",
+    "project_id": "suntime-15-45",
+    "storage_bucket": "suntime-15-45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56410204684:android:99066ec37d705397815c29",
+        "android_client_info": {
+          "package_name": "com.suntimemain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56410204684-rmlptq9nt23ujgr8rj4iq3lb1edhuo3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.suntimemain",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "56410204684-a836r12d2qcogv0j0v8g1lvbmadnpebd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEx0oKN_dCxfMuzkr4COSVr6J58l5AoPg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56410204684-a836r12d2qcogv0j0v8g1lvbmadnpebd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "56410204684-l355djjh9asnsnd4v8end7a7qni3r1jo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.suntimeMain"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

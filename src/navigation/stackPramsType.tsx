@@ -5,4 +5,13 @@ export type StackParams = {
     Login:{
         name: undefined;
     }
+    Register:{
+        name:undefined
+    },
+    PrayerTime:{
+        name:undefined
+    },
+    Tasks:{
+        name:undefined
+    },
 }
