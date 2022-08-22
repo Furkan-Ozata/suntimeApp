@@ -43,13 +43,14 @@ export default class Login extends Component {
     auth()
   .signOut()
   .then(() => console.log('User signed out!'));
+  
   }
 
   render() {
     
     return (
         <NativeBaseProvider>
-        <Center  flex={1} bgColor={"#2A2541"} w="100%">
+        <Center  flex={1} bgColor={"#13111D"} w="100%">
         <Box     safeArea p="2" py="8" w="90%" maxW="290">
           <Heading size="lg" fontWeight="600" color="#fff" >
             Hos Geldiniz
@@ -74,11 +75,11 @@ export default class Login extends Component {
                 Sifreni mi unuttun?
               </Link>
             </FormControl>
-            <Button onPress={()=>this.login(this.state.email, this.state.password)} mt="2" colorScheme="purple">
+            <Button onPress={()=>this.login(this.state.email, this.state.password)} mt="2" bg="#7855FF">
               Sign in
             </Button>
-            <Button onPress={()=>this.signOut()} mt="2" colorScheme="purple">
-              cikis
+            <Button onPress={()=>this.signOut()} mt="2" bg="#7855FF">
+              cikisr
             </Button>
             <HStack mt="6" justifyContent="center">
               <Text fontSize="sm" color="#fff">

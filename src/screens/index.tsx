@@ -1,7 +1,9 @@
 import Home from "./authScreens/Home";
 import Login from "./authScreens/Login";
 import Register from "./authScreens/Register";
-import Tasks from "./appScreens/Tasks";
+import BeforePrayer from "./appScreens/Tasks";
 import PrayerTime from "./appScreens/PrayerTime";
+import AfterPrayer from "./appScreens/AfterPrayer";
 
-export {Home, Login, Register,PrayerTime, Tasks}
+
+export {Home, Login, Register,PrayerTime, BeforePrayer, AfterPrayer}

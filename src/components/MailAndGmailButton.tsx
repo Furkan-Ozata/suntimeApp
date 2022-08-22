@@ -17,7 +17,7 @@ const mailAndGmailButton: FC<Props> = props => {
         <Button
           bg={props.color}
           size={'md'}
-          w={'90%'}
+          w={'85%'}
           h={'10'}
           onPress={props.onPress}
           leftIcon={<Icon as={Ionicons} name={props.icon} size="lg" />}>

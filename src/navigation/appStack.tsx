@@ -1,20 +1,32 @@
-import React, { FC } from "react";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {Tasks, PrayerTime} from "../screens";
-
+import React, {FC} from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {PrayerTime, BeforePrayer, AfterPrayer} from '../screens';
+import TabBar from './tabBar/TabBar';
 
 const AppStack: FC = () => {
-  const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
 
   return (
-    <Stack.Navigator initialRouteName="GameCreate" screenOptions={{
-      title: '', headerStyle: {
-        backgroundColor: '#2A2541',
-      },
-    }}>
-      <Stack.Screen name="PrayerTime" component={PrayerTime} options={{ headerShown: false }} />
-      <Stack.Screen name="Tasks" component={Tasks} options={{ headerShown: false }} />
-    </Stack.Navigator>
-  )
-}
-export default AppStack
+    <Tab.Navigator tabBar={props => <TabBar {...props} />}>
+      <Tab.Screen
+        name="BeforePrayer"
+        component={BeforePrayer}
+        initialParams={{icon: 'moon-outline'}}
+        options={{headerShown: false, tabBarShowLabel: false}}
+      />
+      <Tab.Screen
+        name="PrayerTime"
+        component={PrayerTime}
+        initialParams={{icon: 'time-outline'}}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="AfterPrayer"
+        component={AfterPrayer}
+        initialParams={{icon: 'sunny-outline'}}
+        options={{headerShown: false}}
+      />
+    </Tab.Navigator>
+  );
+};
+export default AppStack;

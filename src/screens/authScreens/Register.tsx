@@ -51,7 +51,7 @@ export default class Register extends Component {
   ) {
     return (
       <NativeBaseProvider>
-        <Center flex={1} px="3" w="100%">
+        <Center flex={1} bgColor={"#13111D"} px="3" w="100%">
           <Box safeArea p="2" w="90%" maxW="290" py="8">
             <Heading
               size="lg"
@@ -85,7 +85,7 @@ export default class Register extends Component {
                 <FormControl.Label>Confirm Password</FormControl.Label>
                 <Input type="password" />
               </FormControl> */}
-              <Button onPress={()=>this.register(this.state.email, this.state.password)} mt="2" colorScheme="purple">
+              <Button onPress={()=>this.register(this.state.email, this.state.password)} mt="2" bg="#7855FF">
                 KAYDOL
               </Button>
             </VStack>

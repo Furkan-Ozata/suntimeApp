@@ -61,6 +61,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = suntimeMain/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-suntimeMain-suntimeMainTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-suntimeMain-suntimeMainTests.release.xcconfig"; path = "Target Support Files/Pods-suntimeMain-suntimeMainTests/Pods-suntimeMain-suntimeMainTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F57542E928B138E7003761C2 /* suntimeMain.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = suntimeMain.entitlements; path = suntimeMain/suntimeMain.entitlements; sourceTree = "<group>"; };
 		F59AD80928AFD0C0005E0318 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fontisto.ttf; sourceTree = "<group>"; };
 		F59AD80A28AFD0C0005E0318 /* Octicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Octicons.ttf; sourceTree = "<group>"; };
 		F59AD80B28AFD0C0005E0318 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
@@ -120,6 +121,7 @@
 		13B07FAE1A68108700A75B9A /* suntimeMain */ = {
 			isa = PBXGroup;
 			children = (
+				F57542E928B138E7003761C2 /* suntimeMain.entitlements */,
 				F59AD80828AFD0C0005E0318 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -539,6 +541,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = suntimeMain/suntimeMain.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6YYC99VB4J;
 				ENABLE_BITCODE = NO;
@@ -566,6 +569,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = suntimeMain/suntimeMain.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6YYC99VB4J;
 				INFOPLIST_FILE = suntimeMain/Info.plist;

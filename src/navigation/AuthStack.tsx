@@ -9,7 +9,7 @@ const AuthStack: FC = () => {
   return (
     <Stack.Navigator initialRouteName="GameCreate" screenOptions={{
       title: '', headerStyle: {
-        backgroundColor: '#2A2541',
+        backgroundColor: '#13111D',
       },
     }}>
       <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />

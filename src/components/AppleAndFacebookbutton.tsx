@@ -7,7 +7,7 @@ interface Props {
   onPress: (p: object) => void;
   color: string;
   icon: string
-  title: string
+  
 }
 
 const AppleAndFacebookButton: FC<Props> = props => {
@@ -22,7 +22,6 @@ const AppleAndFacebookButton: FC<Props> = props => {
           h={'10'}
           onPress={props.onPress}
           leftIcon={<Icon as={Ionicons} name={props.icon} size="lg" />}>
-          {props.title}
         </Button>
       </VStack>
     </NativeBaseProvider>
