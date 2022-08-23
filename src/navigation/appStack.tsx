@@ -7,12 +7,12 @@ const AppStack: FC = () => {
   const Tab = createBottomTabNavigator();
 
   return (
-    <Tab.Navigator tabBar={props => <TabBar {...props} />}>
+    <Tab.Navigator initialRouteName='PrayerTime' tabBar={props => <TabBar {...props} />}>
       <Tab.Screen
         name="BeforePrayer"
         component={BeforePrayer}
         initialParams={{icon: 'moon-outline'}}
-        options={{headerShown: false, tabBarShowLabel: false}}
+        options={{headerShown: false}}
       />
       <Tab.Screen
         name="PrayerTime"
@@ -20,6 +20,7 @@ const AppStack: FC = () => {
         initialParams={{icon: 'time-outline'}}
         options={{headerShown: false}}
       />
+
       <Tab.Screen
         name="AfterPrayer"
         component={AfterPrayer}

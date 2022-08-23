@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View, Button,ScrollView } from 'react-native';
+import {StyleSheet, Text, View, Button, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {StackParams} from '../../navigation/stackPramsType';
@@ -7,7 +7,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
-
+import MailAndGmailButton from '../../components/MailAndGmailButton';
 
 const navigation = useNavigation<NativeStackNavigationProp<StackParams>>();
 
@@ -65,93 +65,90 @@ export default class Tab1 extends Component {
 
   render() {
     return (
-      <AnimatedScrollView >
+      <AnimatedScrollView>
         <View style={styles.container}>
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={this.state.country}
-          search
-          maxHeight={300}
-          labelField="UlkeAdi"
-          valueField="UlkeID"
-          placeholder={'Select Country'}
-          searchPlaceholder="Search..."
-          value={this.state.valueDropdownCountry}
-          onChange={item => {
-            this.setState({
-              valueDropdownCountry: item.UlkeID,
-            });
-            this.getCities(item.UlkeID);
-          }}
-        />
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={this.state.cities}
-          search
-          maxHeight={300}
-          labelField={
-            this.state.valueDropdownCountry === '2' ? 'sehirAdi' : 'SehirAdi'
-          }
-          valueField={
-            this.state.valueDropdownCountry === '2' ? 'sehirID' : 'SehirID'
-          }
-          placeholder={'Select City'}
-          searchPlaceholder="Search..."
-          value={this.state.valueDropdownCities}
-          onChange={item => {
-            if (this.state.valueDropdownCountry == '2') {
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={this.state.country}
+            search
+            maxHeight={300}
+            labelField="UlkeAdi"
+            valueField="UlkeID"
+            placeholder={'Select Country'}
+            searchPlaceholder="Search..."
+            value={this.state.valueDropdownCountry}
+            onChange={item => {
               this.setState({
-                valueDropdownCities: item.sehirID,
+                valueDropdownCountry: item.UlkeID,
               });
-              this.getTown(item.sehirID);
-            } else {
-              this.setState({
-                valueDropdownCities: item.SehirID,
-              });
-              this.getTown(item.SehirID);
+              this.getCities(item.UlkeID);
+            }}
+          />
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={this.state.cities}
+            search
+            maxHeight={300}
+            labelField={
+              this.state.valueDropdownCountry === '2' ? 'sehirAdi' : 'SehirAdi'
             }
-          }}
-        />
-        <Dropdown
-          style={styles.dropdown}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={this.state.town}
-          search
-          maxHeight={300}
-          labelField="IlceAdi"
-          valueField="IlceID"
-          placeholder={'Select Town'}
-          searchPlaceholder="Search..."
-          value={this.state.valueDropdownTown}
-          onChange={item => {
-            this.setState({
-              valueDropdownCountry: item.IlceID,
-            });
-            this.getTime(item.IlceID);
-          }}
-        />
+            valueField={
+              this.state.valueDropdownCountry === '2' ? 'sehirID' : 'SehirID'
+            }
+            placeholder={'Select City'}
+            searchPlaceholder="Search..."
+            value={this.state.valueDropdownCities}
+            onChange={item => {
+              if (this.state.valueDropdownCountry == '2') {
+                this.setState({
+                  valueDropdownCities: item.sehirID,
+                });
+                this.getTown(item.sehirID);
+              } else {
+                this.setState({
+                  valueDropdownCities: item.SehirID,
+                });
+                this.getTown(item.SehirID);
+              }
+            }}
+          />
+          <Dropdown
+            style={styles.dropdown}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            data={this.state.town}
+            search
+            maxHeight={300}
+            labelField="IlceAdi"
+            valueField="IlceID"
+            placeholder={'Select Town'}
+            searchPlaceholder="Search..."
+            value={this.state.valueDropdownTown}
+            onChange={item => {
+              this.setState({
+                valueDropdownCountry: item.IlceID,
+              });
+              this.getTime(item.IlceID);
+            }}
+          />
         </View>
 
-<View style={styles.dateContainer}>
-<Text style={styles.dateText}>Tarih</Text>
-<Text style={styles.date}>{this.state.time[0]}</Text>
-</View>
-
-
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateText}>Tarih</Text>
+          <Text style={styles.date}>{this.state.time[0]}</Text>
+        </View>
 
         <View style={styles.textContainer}>
-         
           <Text style={styles.prayerDateText}>
             Imsak : {this.state.time[1]}
           </Text>
@@ -165,20 +162,18 @@ export default class Tab1 extends Component {
           <Text style={styles.prayerDateText}>
             Yatsi : {this.state.time[5]}
           </Text>
-          <Button
-            title={'cikis'}
-            onPress={() => {
-              this.signOut();
-            }}
-          />
+          <View style={styles.exitButton} >
+          <MailAndGmailButton
+              icon={"exit-outline"}
+              color={'red.900'}
+              onPress={() =>
+               this.signOut()
+              }
+              title={'HESAPTAN ÇIKIS YAP'}
+            />
+            </View>
+          
         </View>
-
-
-
-
-
-
-
       </AnimatedScrollView>
     );
   }
@@ -240,18 +235,23 @@ const styles = StyleSheet.create({
     color: '#7855FF',
     fontWeight: 'bold',
   },
-  date:{
+  date: {
     fontSize: 30,
     color: '#fff',
     fontWeight: 'bold',
   },
-  dateContainer:{
-    justifyContent:'center',
-    alignItems:'center'
+  dateContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textContainer: {
     marginTop: '15%',
-    paddingLeft: '5%',
-    justifyContent:'flex-end'
+    paddingLeft: '10%',
+    justifyContent: 'flex-end',
   },
+  exitButton:{
+    paddingTop:100,
+    paddingRight:37
+    
+  }
 });

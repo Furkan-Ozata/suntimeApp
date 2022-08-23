@@ -14,4 +14,10 @@ export type StackParams = {
     Tasks:{
         name:undefined
     },
+    AfterPrayer:{
+        name:undefined
+    },
+    BeforePrayer:{
+        name:undefined
+    },
 }
