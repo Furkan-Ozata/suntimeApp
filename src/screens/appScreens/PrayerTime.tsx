@@ -8,9 +8,12 @@ import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
 import MailAndGmailButton from '../../components/MailAndGmailButton';
+import store from '../../store/MainStore';
+import {observe} from 'mobx';
 
 const navigation = useNavigation<NativeStackNavigationProp<StackParams>>();
 
+observe;
 export default class Tab1 extends Component {
   constructor(props: any) {
     super(props);
@@ -18,7 +21,7 @@ export default class Tab1 extends Component {
       country: [],
       cities: [],
       town: [],
-      time: [],
+
       valueDropdownCountry: '',
       valueDropdownCities: '',
       valueDropdownTown: '',
@@ -31,6 +34,7 @@ export default class Tab1 extends Component {
     );
     const country = await countryResponse.json();
     this.setState({country: country});
+    
   }
   getCities = async UlkeID => {
     const citiesResponse = await fetch(
@@ -51,7 +55,7 @@ export default class Tab1 extends Component {
       `https://namaz-vakti-api.herokuapp.com/data?region=${IlceID}`,
     );
     const time = await timeResponse.json();
-    this.setState({time: time[0]});
+    store.time = time[0];
   };
 
   signOut() {
@@ -141,38 +145,28 @@ export default class Tab1 extends Component {
               this.getTime(item.IlceID);
             }}
           />
+          <Button title={'TAMAM'} onPress={() => this.componentDidMount()} />
         </View>
 
         <View style={styles.dateContainer}>
-          <Text style={styles.dateText}>Tarih</Text>
-          <Text style={styles.date}>{this.state.time[0]}</Text>
+          <Text style={styles.dateText}>NAMAZ VAKİTLERİ</Text>
         </View>
 
         <View style={styles.textContainer}>
-          <Text style={styles.prayerDateText}>
-            Imsak : {this.state.time[1]}
-          </Text>
-          <Text style={styles.prayerDateText}>
-            Gunes : {this.state.time[2]}
-          </Text>
-          <Text style={styles.prayerDateText}>Ogle : {this.state.time[3]}</Text>
-          <Text style={styles.prayerDateText}>
-            Aksam : {this.state.time[4]}
-          </Text>
-          <Text style={styles.prayerDateText}>
-            Yatsi : {this.state.time[5]}
-          </Text>
-          <View style={styles.exitButton} >
+          <Text style={styles.prayerDateText}>İmsak : {store.time[1]}</Text>
+          <Text style={styles.prayerDateText}>Günes : {store.time[2]}</Text>
+          <Text style={styles.prayerDateText}>Öğle : {store.time[3]}</Text>
+          <Text style={styles.prayerDateText}>İkindi : {store.time[4]}</Text>
+          <Text style={styles.prayerDateText}>Akşam : {store.time[5]}</Text>
+          <Text style={styles.prayerDateText}>Yatsı : {store.time[6]}</Text>
+        </View>
+        <View style={styles.exitButton}>
           <MailAndGmailButton
-              icon={"exit-outline"}
-              color={'red.900'}
-              onPress={() =>
-               this.signOut()
-              }
-              title={'HESAPTAN ÇIKIS YAP'}
-            />
-            </View>
-          
+            icon={'exit-outline'}
+            color={'red.900'}
+            onPress={() => this.signOut()}
+            title={'HESAPTAN ÇIKIS YAP'}
+          />
         </View>
       </AnimatedScrollView>
     );
@@ -234,6 +228,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: '#7855FF',
     fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
   date: {
     fontSize: 30,
@@ -245,13 +240,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textContainer: {
-    marginTop: '15%',
-    paddingLeft: '10%',
+    marginTop: '5%',
+    paddingLeft: '27%',
+
     justifyContent: 'flex-end',
   },
-  exitButton:{
-    paddingTop:100,
-    paddingRight:37
-    
-  }
+  exitButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: '15%',
+  },
 });

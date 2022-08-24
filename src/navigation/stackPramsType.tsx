@@ -11,9 +11,6 @@ export type StackParams = {
     PrayerTime:{
         name:undefined
     },
-    Tasks:{
-        name:undefined
-    },
     AfterPrayer:{
         name:undefined
     },

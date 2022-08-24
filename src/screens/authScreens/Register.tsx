@@ -24,13 +24,12 @@ export default class Register extends Component {
       password: '',
     };
   }
-  register(email: string, password: string){
-    console.log(this.state.email)
+  register(email: string, password: string) {
+    console.log(this.state.email);
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
         console.log('User account created & signed in!');
-        
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -43,15 +42,12 @@ export default class Register extends Component {
 
         console.error(error);
       });
-  };
+  }
 
-
-  render(
-    
-  ) {
+  render() {
     return (
       <NativeBaseProvider>
-        <Center flex={1} bgColor={"#13111D"} px="3" w="100%">
+        <Center flex={1} bgColor={'#13111D'} px="3" w="100%">
           <Box safeArea p="2" w="90%" maxW="290" py="8">
             <Heading
               size="lg"
@@ -60,7 +56,7 @@ export default class Register extends Component {
                 color: 'warmGray.50',
               }}
               fontWeight="semibold">
-              Welcome
+              Hoş Geldiniz
             </Heading>
             <Heading
               mt="1"
@@ -70,22 +66,34 @@ export default class Register extends Component {
               }}
               fontWeight="medium"
               size="xs">
-              Sign up to continue!
+              Devam etmek için kaydolun!
             </Heading>
             <VStack space={3} mt="5">
-              <FormControl >
+              <FormControl>
                 <FormControl.Label>Email</FormControl.Label>
-                <Input onChangeText={(text)=>this.setState({email: text}) }/>
+                <Input
+                  color={'white'}
+                  onChangeText={text => this.setState({email: text})}
+                />
               </FormControl>
               <FormControl>
-                <FormControl.Label>Password</FormControl.Label>
-                <Input onChangeText={(text)=>this.setState({password:text})} type="password" />
+                <FormControl.Label>Şifre</FormControl.Label>
+                <Input
+                  color={'white'}
+                  onChangeText={text => this.setState({password: text})}
+                  type="password"
+                />
               </FormControl>
-              {/* <FormControl>
-                <FormControl.Label>Confirm Password</FormControl.Label>
-                <Input type="password" />
-              </FormControl> */}
-              <Button onPress={()=>this.register(this.state.email, this.state.password)} mt="2" bg="#7855FF">
+              <FormControl>
+                <FormControl.Label>Şifreyi onayla</FormControl.Label>
+                <Input color={'white'} type="password" />
+              </FormControl>
+              <Button
+                onPress={() =>
+                  this.register(this.state.email, this.state.password)
+                }
+                mt="2"
+                bg="#7855FF">
                 KAYDOL
               </Button>
             </VStack>

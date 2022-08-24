@@ -13,8 +13,10 @@ import {
   Pressable,
 } from 'react-native';
 import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
-
-
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import store from '../../store/MainStore';
+import {PrayerTime} from '..';
 
 export default class BeforePrayer extends Component {
   //State variables
@@ -24,6 +26,8 @@ export default class BeforePrayer extends Component {
     this.state = {
       beforePrayerList: [],
       value: '',
+      PrayerTime: null,
+      weakUpTime: null,
     };
   }
 
@@ -35,8 +39,20 @@ export default class BeforePrayer extends Component {
         text: text,
         isSelected: false,
       });
+      const {currentUser} = auth();
+      const {uid} = currentUser;
+      firestore()
+        .collection('Users')
+        .doc(uid)
+        .update({
+          beforePrayerList: this.state.beforePrayerList,
+        })
+        .then(() => {
+          console.log('User added!');
+        });
 
       this.setState({value: ''});
+      900;
     } else {
       Alert.alert('Please type in something!');
     }
@@ -55,6 +71,17 @@ export default class BeforePrayer extends Component {
     }
 
     this.setState({beforePrayerList: data}); // Setting the new state
+    const {currentUser} = auth();
+    const {uid} = currentUser;
+    firestore()
+      .collection('Users')
+      .doc(uid)
+      .update({
+        beforePrayerList: data,
+      })
+      .then(() => {
+        console.log('User added!');
+      });
   }
 
   // A function that delete an item at position idx from the list array
@@ -70,24 +97,121 @@ export default class BeforePrayer extends Component {
           const data = this.state.beforePrayerList.filter(
             (item: any, index: any) => index !== idx,
           );
+
           this.setState({beforePrayerList: data});
+          const {currentUser} = auth();
+          const {uid} = currentUser;
+          firestore()
+            .collection('Users')
+            .doc(uid)
+            .update({
+              beforePrayerList: data,
+            })
+            .then(() => {
+              console.log('User added!');
+            });
         },
       },
     ]);
+  }
+
+  getCurrentTime() {
+    if (store.time[2] == undefined) {
+      this.setState({weakUpTime: ''});
+    } else {
+      let [getX, getY] = store.time[2].split(':');
+
+      if (getX !== 0 && getY < 45) {
+        this.setState({weakUpTime: getX - 2 + ':' + (60 - (45 - getY))});
+      } else if (getX !== 0 && getY >= 45) {
+        this.setState({weakUpTime: getX - 1 + ':' + (getY - 45)});
+      } else if (getX == 0 && getY < 45) {
+        this.setState({weakUpTime: '22' + ':' + (60 - (45 - getY))});
+      } else if (getX == 0 && getY >= 45) {
+        this.setState({weakUpTime: '23' + ':' + (getY - 45)});
+      }
+
+      let hour = new Date().getHours();
+      let minute = new Date().getMinutes();
+      let kalanSaat = 0;
+      let kalanDakika = 0;
+
+      if (getY < Number(minute)) {
+        let x = Number(minute) - getY;
+        kalanDakika = 60 - x;
+        Number(hour) - 1;
+      } else {
+        kalanDakika = getY - Number(minute);
+      }
+
+      if (getX < Number(hour)) {
+        let x = Number(hour) - getX;
+        kalanSaat = 24 - x;
+      } else {
+        kalanSaat = getX - Number(hour);
+      }
+
+      this.setState({
+        prayerTime:
+          (Math.abs(kalanSaat) == 0
+            ? '0' + (Math.abs(kalanSaat) - 1)
+            : Math.abs(kalanSaat) - 1) +
+          ':' +
+          (Math.abs(kalanDakika) < 10
+            ? '0' + (Math.abs(kalanDakika) - 1)
+            : Math.abs(kalanDakika) - 1),
+      });
+    }
+  }
+
+  async componentDidMount() {
+    this.getCurrentTime();
+    this.timer = setInterval(() => {
+      this.getCurrentTime();
+    }, 10000);
+
+    const {currentUser} = auth();
+    const {uid} = currentUser;
+
+    firestore()
+      .collection('Users')
+      .doc(uid)
+      .onSnapshot(list => {
+        const listData = list.data();
+        if (listData.beforePrayerList !== undefined) {
+          let data = listData.beforePrayerList;
+
+          this.setState({beforePrayerList: data});
+
+          console.log(this.state.beforePrayerList);
+        }
+      });
   }
 
   render() {
     return (
       <>
         <View style={styles.container}>
-          <Text
-            style={{
-              fontSize: 24,
-              color: '#fff',
-              marginBottom: 15,
-            }}>
-            What need to be done.
-          </Text>
+          <View style={styles.timeTextContainer}>
+            <Text
+              style={{
+                fontSize: 24,
+                color: 'red',
+                marginBottom: 15,
+              }}>
+              Ezana kalan sure... {this.state.prayerTime}
+            </Text>
+
+            <Text style={styles.timeText}>UYANMA SAATI</Text>
+            <Text
+              style={{
+                fontSize: 24,
+                color: 'red',
+                marginBottom: 15,
+              }}>
+              {this.state.weakUpTime}
+            </Text>
+          </View>
           <AnimatedScrollView>
             <FlatList
               style={{flex: 1}}
@@ -136,66 +260,76 @@ export default class BeforePrayer extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight + 10,
-      flex: 4,
-      backgroundColor: '#13111D',
-      padding: 19,
-    },
-    textBoxWrapper: {
-      width: '100%',
-      bottom: 35,
-      left: 0,
-      flexDirection: 'row',
-      alignItems: 'center',
-      padding: 19,
-      flex: 1,
-    },
-    textInput: {
-      elevation: 5,
-      shadowColor: '#fff',
-      shadowOffset: {width: 2, height: 12},
-      shadowRadius: 12,
-      borderRadius: 25,
-      backgroundColor: '#fff',
-      height: 42,
-      paddingLeft: 15,
-      width: '90%',
-      color: '#003131',
-      marginRight: 15,
-      fontSize: 20,
-    },
-    btn: {
-      elevation: 5,
-      shadowColor: '#fff',
-      shadowOffset: {width: 2, height: 12},
-      shadowRadius: 12,
-      backgroundColor: '#7855FF',
-      height: 42,
-      width: 42,
-      borderRadius: 100,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    view: {
-      elevation: 5,
-      shadowColor: '#fff',
-      shadowOffset: {width: 2, height: 12},
-      shadowRadius: 12,
-      width: '100%',
-      paddingVertical: 10,
-      paddingHorizontal: 19,
-      borderRadius: 15,
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-      marginBottom: 15,
-    },
-    text: {
-      fontSize: 20,
-      color: ' #003131',
-    },
-    checkbox: {
-      marginRight: 15,
-    },
-  });
+  container: {
+    paddingTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight + 10,
+    flex: 4,
+    backgroundColor: '#13111D',
+    padding: 19,
+  },
+  textBoxWrapper: {
+    width: '100%',
+    bottom: 35,
+    left: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 19,
+    flex: 1,
+  },
+  textInput: {
+    elevation: 5,
+    shadowColor: '#fff',
+    shadowOffset: {width: 2, height: 12},
+    shadowRadius: 12,
+    borderRadius: 25,
+    backgroundColor: '#fff',
+    height: 42,
+    paddingLeft: 15,
+    width: '90%',
+    color: '#003131',
+    marginRight: 15,
+    fontSize: 20,
+  },
+  btn: {
+    elevation: 5,
+    shadowColor: '#fff',
+    shadowOffset: {width: 2, height: 12},
+    shadowRadius: 12,
+    backgroundColor: '#7855FF',
+    height: 42,
+    width: 42,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  view: {
+    elevation: 5,
+    shadowColor: '#fff',
+    shadowOffset: {width: 2, height: 12},
+    shadowRadius: 12,
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 19,
+    borderRadius: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    marginBottom: 15,
+  },
+  text: {
+    fontSize: 20,
+    color: ' #003131',
+  },
+  checkbox: {
+    marginRight: 15,
+  },
+  timeTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timeText: {
+    fontSize: 25,
+    color: '#7855FF',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
+  },
+});

@@ -1,109 +1,3 @@
-// import React, {Component} from 'react';
-// import {StyleSheet, Text, View} from 'react-native';
-// import {useNavigation} from '@react-navigation/native';
-// import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-// import {StackParams} from '../../navigation/stackPramsType';
-
-// const navigation = useNavigation<NativeStackNavigationProp<StackParams>>();
-
-// export default class AfterPrayer extends Component {
-//   constructor(props: any) {
-//     super(props);
-
-//     this.state = {
-//       currentTime: null,
-//       currentDay: null,
-//       daysArray: [
-//         'pazar',
-//         'pazartesi',
-//         'sali',
-//         'carsamba',
-//         'persembe',
-//         'cuma',
-//         'cumartesi',
-//         'pazar'
-//       ],
-//     };
-//   }
-
-//   componentWillMount() {
-//     this.getCurrentTime();
-//   }
-
-//   getCurrentTime = () => {
-//     let hour = new Date().getHours();
-//     let minutes = new Date().getMinutes();
-//     let seconds = new Date().getSeconds();
-
-//     if (minutes < 10) {
-//       minutes = '0' + minutes;
-//     }
-
-//     if (seconds< 10) {
-//       seconds = '0' + seconds;
-//     }
-
-//     if (hour == 0) {
-//       hour = '00';
-//     }
-
-//     this.setState({
-//       currentTime: hour + ':' + minutes + ':' + seconds + ' ' ,
-//     });
-
-//     this.state.daysArray.map((item, key) => {
-//       if (key == new Date().getDay()) {
-//         this.setState({currentDay: item.toUpperCase()});
-//       }
-//     });
-//   };
-//   componentWillUnmount() {
-//     clearInterval(this.timer);
-//   }
-
-//   componentDidMount() {
-//     this.timer = setInterval(() => {
-//       this.getCurrentTime();
-//     }, 1000);
-//   }
-
-//   render() {
-//     return (
-//       <View style={styles.container}>
-//         <View>
-//           <Text style={styles.daysText}>{this.state.currentDay}</Text>
-//           <Text style={styles.timeText}>{this.state.currentTime}</Text>
-//         </View>
-//       </View>
-//     );
-//   }
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     paddingTop: Platform.OS === 'ios' ? 20 : 0,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   headerText: {
-//     fontSize: 30,
-//     textAlign: 'center',
-//     margin: 10,
-//     color: 'black',
-//     fontWeight: 'bold',
-//   },
-//   timeText: {
-//     fontSize: 50,
-//     color: '#f44336',
-//   },
-//   daysText: {
-//     color: '#2196f3',
-//     fontSize: 25,
-//     paddingBottom: 0,
-//   },
-// });
-
 import CheckBox from '@react-native-community/checkbox';
 import React, {Component, useState} from 'react';
 import {
@@ -121,7 +15,10 @@ import {
 import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import store from '../../store/MainStore';
+import {observe} from 'mobx';
 
+observe;
 export default class AfterPrayer extends Component {
   //State variables
 
@@ -130,27 +27,10 @@ export default class AfterPrayer extends Component {
     this.state = {
       afterPrayerList: [],
       value: '',
+      currentTime: null,
+      prayerTime: null,
     };
   }
-
-  //   componentDidMount() {
-  //     const {currentUser} = auth();
-  //     const {uid} = currentUser;
-
-  //     firestore()
-  //       .collection('listOfGames')
-  //       .onSnapshot(snapshot => {
-  //         const historiesMap = [];
-  //         snapshot.forEach(doc => {
-  //           historiesMap.push({...doc.data(), ref: doc.ref, id: doc.id});
-  //         });
-  //         historiesMap.sort((a, b) => a.createdAt - b.createdAt);
-
-  //         this.setState({
-  //           listOfGamesState: historiesMap,
-  //         });
-  //       });
-  //   }
 
   // A function that add data to the list array
   addText(text: any) {
@@ -172,7 +52,8 @@ export default class AfterPrayer extends Component {
           console.log('User added!');
         });
 
-      this.setState({value: ''});900
+      this.setState({value: ''});
+      900;
     } else {
       Alert.alert('Please type in something!');
     }
@@ -235,45 +116,116 @@ export default class AfterPrayer extends Component {
     ]);
   }
 
-  componentDidMount() {
+  getCurrentTime() {
+    if (store.time[2] == undefined) {
+      this.setState({PrayerTime: 'KONUM GIRINIZ'});
+    } else {
+      let [getX, getY] = store.time[2].split(':');
+
+      if (getY < 0) {
+        getY = 60 - Math.abs(getY);
+        if (getX == 0) {
+          getX = 23;
+        } else {
+          getX = getX - 1;
+        }
+      }
+      this.setState({
+        PrayerTime:
+          (getX == 0 ? '00' : getX) + ':' + (getY < 10 ? '0' + getY : getY),
+      });
+      // console.log(getX, getY);
+
+      let hour = new Date().getHours();
+      let minute = new Date().getMinutes();
+      let kalanSaat = 0;
+      let kalanDakika = 0;
+
+      if (getY < Number(minute)) {
+        let x = Number(minute) - getY;
+        kalanDakika = 60 - x;
+        Number(hour) - 1;
+      } else {
+        kalanDakika = getY - Number(minute);
+      }
+
+      if (getX < Number(hour)) {
+        let x = Number(hour) - getX;
+        kalanSaat = 24 - x;
+      } else {
+        kalanSaat = getX - Number(hour);
+      }
+
+      this.setState({
+        currentTime:
+          (Math.abs(kalanSaat) == 0
+            ? '0' + Math.abs(kalanSaat)
+            : Math.abs(kalanSaat)) +
+          ':' +
+          (Math.abs(kalanDakika) < 10
+            ? '0' + Math.abs(kalanDakika)
+            : Math.abs(kalanDakika)),
+      });
+      // console.log(Math.abs(kalanSaat), Math.abs(kalanDakika));
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  componentWillMount() {
+    this.getCurrentTime();
+  }
+
+  async componentDidMount() {
+    this.getCurrentTime();
+    this.timer = setInterval(() => {
+      this.getCurrentTime();
+    }, 15000);
+
     const {currentUser} = auth();
     const {uid} = currentUser;
 
-    // const subscriber= firestore()
-    //   .collection('Users')
-    //   .doc(uid)
-    //   .get()
-    //   .then(list => {
-    //     const listData = list.data();
-    //     let data = listData.afterPrayerList;
-    //     this.state.afterPrayerList = data;
-    //   })
-    //   .catch(err => console.log(err));
     firestore()
-          .collection('Users')
-          .doc(uid)
-          .onSnapshot(list => {
-              const listData = list.data();
-              let data = listData.afterPrayerList;
+      .collection('Users')
+      .doc(uid)
+      .onSnapshot(list => {
+        const listData = list.data();
+        if (listData !== undefined) {
+          let data = listData.afterPrayerList;
 
-              this.state.afterPrayerList = data;
+          this.setState({afterPrayerList: data});
 
-              console.log(this.state.afterPrayerList);
-          });
+          console.log(this.state.afterPrayerList);
+        }
+      });
   }
 
   render() {
     return (
       <>
         <View style={styles.container}>
-          <Text
-            style={{
-              fontSize: 24,
-              color: '#fff',
-              marginBottom: 15,
-            }}>
-            What need to be done.
-          </Text>
+          <View style={styles.timeTextContainer}>
+            <Text
+              style={{
+                fontSize: 24,
+                color: 'red',
+                marginBottom: 15,
+              }}>
+              Güneşe kalan süre... {this.state.currentTime}
+            </Text>
+
+            <Text style={styles.timeText}>BİTİRMEN GEREKEN SAAT</Text>
+            <Text
+              style={{
+                fontSize: 24,
+                color: 'red',
+                marginBottom: 15,
+              }}>
+              {this.state.PrayerTime}
+            </Text>
+          </View>
           <AnimatedScrollView>
             <FlatList
               style={{flex: 1}}
@@ -383,5 +335,15 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     marginRight: 15,
+  },
+  timeTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timeText: {
+    fontSize: 25,
+    color: '#7855FF',
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });

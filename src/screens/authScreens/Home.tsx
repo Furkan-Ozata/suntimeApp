@@ -8,7 +8,6 @@ import AppleAndFacebookButton from '../../components/AppleAndFacebookbutton';
 import {Text, Link, NativeBaseProvider, HStack} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-// import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 
 const navigation = useNavigation<NativeStackNavigationProp<StackParams>>();
 
@@ -35,33 +34,6 @@ export default class Home extends Component {
     // Sign-in the user with the credential
     return auth().signInWithCredential(googleCredential);
   }
-
-  // async facebookSignIn() {
-  //   // Attempt login with permissions
-  //   const result = await LoginManager.logInWithPermissions([
-  //     'public_profile',
-  //     'email',
-  //   ]);
-
-  //   if (result.isCancelled) {
-  //     throw 'User cancelled the login process';
-  //   }
-
-  //   // Once signed in, get the users AccesToken
-  //   const data = await AccessToken.getCurrentAccessToken();
-
-  //   if (!data) {
-  //     throw 'Something went wrong obtaining access token';
-  //   }
-
-  //   // Create a Firebase credential with the AccessToken
-  //   const facebookCredential = auth.FacebookAuthProvider.credential(
-  //     data.accessToken,
-  //   );
-
-  //   // Sign-in the user with the credential
-  //   return auth().signInWithCredential(facebookCredential);
-  // }
 
   render() {
     return (
@@ -90,32 +62,16 @@ export default class Home extends Component {
               }
               title={'GOOGLE ILE DEVAM ET'}
             />
-             <MailAndGmailButton
-                icon={'logo-apple'}
-                color={'black'}
-                onPress={() => Alert.alert('APPLE')}
+            <MailAndGmailButton
+              icon={'logo-apple'}
+              color={'black'}
+              onPress={() => Alert.alert('APPLE')}
               title={'APPLE ILE DEVAM ET'}
             />
-            {/* <View style={styles.button}>
-              <AppleAndFacebookButton
-                icon={'logo-apple'}
-                color={'black'}
-                onPress={() => Alert.alert('APPLE')}
-              />
-              <AppleAndFacebookButton
-                icon={'logo-facebook'}
-                color={'blue.600'}
-                onPress={() =>
-                  this.facebookSignIn().then(() =>
-                    console.log('Signed in with Facebook!'),
-                  )
-                }
-              />
-            </View> */}
 
             <HStack mt="6" justifyContent="center">
               <Text fontSize="lg" color="#fff">
-                Hemen Simdi{' '}
+                Hemen Şimdi{' '}
               </Text>
               <Link
                 onPress={() => navigation.navigate('Register')}
