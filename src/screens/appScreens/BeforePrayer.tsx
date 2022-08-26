@@ -155,7 +155,7 @@ export default class BeforePrayer extends Component {
       this.setState({
         prayerTime:
           (Math.abs(kalanSaat) == 0
-            ? '0' + (Math.abs(kalanSaat) - 1)
+            ? '22'
             : Math.abs(kalanSaat) - 1) +
           ':' +
           (Math.abs(kalanDakika) < 10
