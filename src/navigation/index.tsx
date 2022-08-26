@@ -1,6 +1,6 @@
 import AuthStack from './AuthStack'
 import MainNav from './mainNav'
-import AppStack from './AppStack'
+import AppStack from './appStack'
 
 
 

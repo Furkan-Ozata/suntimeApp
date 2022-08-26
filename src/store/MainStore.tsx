@@ -2,7 +2,7 @@ import {observable} from 'mobx';
 
 class MainStore{
   @observable time = []
-  @observable afterPrayerList = []
+
 
 
 }

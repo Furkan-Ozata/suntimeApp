@@ -2,7 +2,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import AuthStack from './AuthStack';
-import AppStack from './AppStack';
+import AppStack from './appStack';
 import TabBarProvider from './tabBar/TabBarProvider';
 
 const MyTheme = {

@@ -9,11 +9,11 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
 import MailAndGmailButton from '../../components/MailAndGmailButton';
 import store from '../../store/MainStore';
-import {observe} from 'mobx';
+import { observer } from 'mobx-react';
 
 const navigation = useNavigation<NativeStackNavigationProp<StackParams>>();
 
-observe;
+observer;
 export default class Tab1 extends Component {
   constructor(props: any) {
     super(props);

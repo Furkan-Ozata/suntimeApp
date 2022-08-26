@@ -16,8 +16,9 @@ import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import store from '../../store/MainStore';
-import {PrayerTime} from '..';
+import {observer} from 'mobx-react';
 
+observer;
 export default class BeforePrayer extends Component {
   //State variables
 
