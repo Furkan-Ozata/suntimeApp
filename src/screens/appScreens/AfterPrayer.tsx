@@ -16,27 +16,27 @@ import AnimatedScrollView from '../../navigation/tabBar/AnimatedScrollView';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import store from '../../store/MainStore';
-import {observe} from 'mobx';
+import {observer} from 'mobx-react';
 
-observe;
-export default class AfterPrayer extends Component {
+observer;
+export default class BeforePrayer extends Component {
   //State variables
 
   constructor(props: any) {
     super(props);
     this.state = {
-      afterPrayerList: [],
+      beforePrayerList: [],
       value: '',
-      currentTime: null,
-      prayerTime: null,
+      PrayerTime: null,
+      weakUpTime: null,
     };
   }
 
   // A function that add data to the list array
   addText(text: any) {
     if (this.state.value !== '') {
-      this.state.afterPrayerList.push({
-        ...this.state.afterPrayerList[this.state.afterPrayerList.length + 1],
+      this.state.beforePrayerList.push({
+        ...this.state.beforePrayerList[this.state.beforePrayerList.length + 1],
         text: text,
         isSelected: false,
       });
@@ -45,8 +45,8 @@ export default class AfterPrayer extends Component {
       firestore()
         .collection('Users')
         .doc(uid)
-        .set({
-          afterPrayerList: this.state.afterPrayerList,
+        .update({
+          beforePrayerList: this.state.beforePrayerList,
         })
         .then(() => {
           console.log('User added!');
@@ -63,22 +63,22 @@ export default class AfterPrayer extends Component {
   setIsSelected(index: number, value: boolean) {
     let data = [];
     // Making a deep copy of the list array
-    for (let i = 0; i < this.state.afterPrayerList.length; i++) {
+    for (let i = 0; i < this.state.beforePrayerList.length; i++) {
       if (index === i) {
-        data.push({...this.state.afterPrayerList[i], isSelected: value}); // Updating the object at position i === index
+        data.push({...this.state.beforePrayerList[i], isSelected: value}); // Updating the object at position i === index
       } else {
-        data.push(this.state.afterPrayerList[i]);
+        data.push(this.state.beforePrayerList[i]);
       }
     }
 
-    this.setState({afterPrayerList: data}); // Setting the new state
+    this.setState({beforePrayerList: data}); // Setting the new state
     const {currentUser} = auth();
     const {uid} = currentUser;
     firestore()
       .collection('Users')
       .doc(uid)
       .update({
-        afterPrayerList: data,
+        beforePrayerList: data,
       })
       .then(() => {
         console.log('User added!');
@@ -95,18 +95,18 @@ export default class AfterPrayer extends Component {
       {
         text: 'Yes',
         onPress: () => {
-          const data = this.state.afterPrayerList.filter(
+          const data = this.state.beforePrayerList.filter(
             (item: any, index: any) => index !== idx,
           );
 
-          this.setState({afterPrayerList: data});
+          this.setState({beforePrayerList: data});
           const {currentUser} = auth();
           const {uid} = currentUser;
           firestore()
             .collection('Users')
             .doc(uid)
             .update({
-              afterPrayerList: data,
+              beforePrayerList: data,
             })
             .then(() => {
               console.log('User added!');
@@ -118,23 +118,19 @@ export default class AfterPrayer extends Component {
 
   getCurrentTime() {
     if (store.time[2] == undefined) {
-      this.setState({PrayerTime: 'KONUM GIRINIZ'});
+      this.setState({weakUpTime: ''});
     } else {
       let [getX, getY] = store.time[2].split(':');
 
-      if (getY < 0) {
-        getY = 60 - Math.abs(getY);
-        if (getX == 0) {
-          getX = 23;
-        } else {
-          getX = getX - 1;
-        }
+      if (getX !== 0 && getY < 45) {
+        this.setState({weakUpTime: getX - 2 + ':' + (60 - (45 - getY))});
+      } else if (getX !== 0 && getY >= 45) {
+        this.setState({weakUpTime: getX - 1 + ':' + (getY - 45)});
+      } else if (getX == 0 && getY < 45) {
+        this.setState({weakUpTime: '22' + ':' + (60 - (45 - getY))});
+      } else if (getX == 0 && getY >= 45) {
+        this.setState({weakUpTime: '23' + ':' + (getY - 45)});
       }
-      this.setState({
-        PrayerTime:
-          (getX == 0 ? '00' : getX) + ':' + (getY < 10 ? '0' + getY : getY),
-      });
-      // console.log(getX, getY);
 
       let hour = new Date().getHours();
       let minute = new Date().getMinutes();
@@ -157,32 +153,23 @@ export default class AfterPrayer extends Component {
       }
 
       this.setState({
-        currentTime:
+        prayerTime:
           (Math.abs(kalanSaat) == 0
-            ? '0' + Math.abs(kalanSaat)
-            : Math.abs(kalanSaat)) +
+            ? '22'
+            : Math.abs(kalanSaat) - 1) +
           ':' +
           (Math.abs(kalanDakika) < 10
-            ? '0' + Math.abs(kalanDakika)
-            : Math.abs(kalanDakika)),
+            ? '0' + (Math.abs(kalanDakika) - 1)
+            : Math.abs(kalanDakika) - 1),
       });
-      // console.log(Math.abs(kalanSaat), Math.abs(kalanDakika));
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  componentWillMount() {
-    this.getCurrentTime();
   }
 
   async componentDidMount() {
     this.getCurrentTime();
     this.timer = setInterval(() => {
       this.getCurrentTime();
-    }, 15000);
+    }, 10000);
 
     const {currentUser} = auth();
     const {uid} = currentUser;
@@ -192,12 +179,12 @@ export default class AfterPrayer extends Component {
       .doc(uid)
       .onSnapshot(list => {
         const listData = list.data();
-        if (listData !== undefined) {
-          let data = listData.afterPrayerList;
+        if (listData.beforePrayerList !== undefined) {
+          let data = listData.beforePrayerList;
 
-          this.setState({afterPrayerList: data});
+          this.setState({beforePrayerList: data});
 
-          console.log(this.state.afterPrayerList);
+          console.log(this.state.beforePrayerList);
         }
       });
   }
@@ -213,23 +200,23 @@ export default class AfterPrayer extends Component {
                 color: 'red',
                 marginBottom: 15,
               }}>
-              Güneşe kalan süre... {this.state.currentTime}
+              Ezana kalan sure... {this.state.prayerTime}
             </Text>
 
-            <Text style={styles.timeText}>BİTİRMEN GEREKEN SAAT</Text>
+            <Text style={styles.timeText}>UYANMA SAATI</Text>
             <Text
               style={{
                 fontSize: 24,
                 color: 'red',
                 marginBottom: 15,
               }}>
-              {this.state.PrayerTime}
+              {this.state.weakUpTime}
             </Text>
           </View>
           <AnimatedScrollView>
             <FlatList
               style={{flex: 1}}
-              data={this.state.afterPrayerList}
+              data={this.state.beforePrayerList}
               renderItem={({item, index}) => (
                 <Pressable
                   style={styles.view}
